@@ -1,7 +1,13 @@
 {
     "python.testing.pytestArgs": [
-        "blueOceanField"
+        "blueOceanField",
+        "tests"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "python.defaultInterpreterPath": "/usr/local/conda",
+    "files.exclude": {
+        "**/__pycache__/**": true,
+        "**/.pytest_cache/**": true
+    }
 }

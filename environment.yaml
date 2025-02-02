@@ -6,6 +6,7 @@ dependencies:
   - aiosqlite
   - rx
   - pytest
+  - pytest-asyncio
   - ta-lib
   - injector
   - isort
