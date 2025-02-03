@@ -3,6 +3,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 from datetime import datetime
 from typing import AsyncIterator
+import rx
 
 from blueOceanField.domain.exchange import Symbol
 
@@ -18,7 +19,17 @@ class Ohlcv:
     decision_at: datetime
 
 
-class IOhlcvRepository(metaclass=ABCMeta):
+class IOhlcvSource(metaclass=ABCMeta):
+    def pull_stream(
+        self,
+        symbol: Symbol,
+        from_: datetime = datetime.min,
+        to: datetime = datetime.max,
+    ) -> rx.Observable:
+        raise NotImplementedError()
+
+
+class IOhlcvRepository(IOhlcvSource, metaclass=ABCMeta):
     @abstractmethod
     async def push_async(
         self,
@@ -34,3 +45,11 @@ class IOhlcvRepository(metaclass=ABCMeta):
         to: datetime = datetime.max,
     ) -> AsyncIterator[Ohlcv]:
         raise NotImplementedError
+    
+    def pull_stream(self, symbol, from_ = datetime.min, to = datetime.max):
+        async def handle(observer, scheduler):
+            async for e in await self.pull_async(symbol, from_, to):
+                observer.on_next(e)
+            observer.on_completed()
+
+        return rx.create(handle)

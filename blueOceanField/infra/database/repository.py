@@ -3,6 +3,7 @@ from typing import Iterator, Type
 
 from sqlalchemy import insert, select
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
+from sqlalchemy.orm import joinedload
 import sqlalchemy.ext
 import sqlalchemy.ext.asyncio
 from blueOceanField.domain.exchange import ExchangePlace
@@ -82,6 +83,7 @@ class OhlcvRepository(IOhlcvRepository):
         async with self.__database.session() as session:
             result = await session.execute(
                 select(OhlcvOrm)
+                .options(joinedload(OhlcvOrm.symbol).joinedload(SymbolOrm.place))
                 .join(SymbolOrm)
                 .join(ExchangePlaceOrm)
                 .where(
