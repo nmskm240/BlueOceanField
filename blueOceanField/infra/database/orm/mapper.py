@@ -1,6 +1,5 @@
 from datetime import UTC, datetime
-from blueOceanField.domain.exchange import ExchangePlace, Symbol
-from blueOceanField.domain.ohlcv import Ohlcv
+from blueOceanField.domain.market import ExchangePlace, Symbol,  Ohlcv
 from blueOceanField.infra.database.orm.model import ExchangePlaceOrm, OhlcvOrm, SymbolOrm
 
 

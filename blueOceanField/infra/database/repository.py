@@ -6,8 +6,7 @@ from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.orm import joinedload
 import sqlalchemy.ext
 import sqlalchemy.ext.asyncio
-from blueOceanField.domain.exchange import ExchangePlace
-from blueOceanField.domain.ohlcv import IOhlcvRepository, Ohlcv
+from blueOceanField.domain.market import ExchangePlace, IOhlcvRepository, Ohlcv
 from blueOceanField.infra.database.database import IDatabase
 from blueOceanField.infra.database.orm.mapper import (
     ExchangePlaceMapper,

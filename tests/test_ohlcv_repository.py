@@ -4,8 +4,7 @@ import sqlalchemy
 
 from blueOceanField.infra.database.repository import OhlcvRepository
 from blueOceanField.infra.database.orm.model import OhlcvBase
-from blueOceanField.domain.ohlcv import Ohlcv
-from blueOceanField.domain.exchange import Symbol, ExchangePlace
+from blueOceanField.domain.market import Ohlcv, Symbol, ExchangePlace
 from blueOceanField.infra.database.database import Database
 
 
