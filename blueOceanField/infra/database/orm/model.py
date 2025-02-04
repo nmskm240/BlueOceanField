@@ -28,7 +28,7 @@ class SymbolOrm(OhlcvBase):
     name = sql.Column(sql.String)
     place_id = sql.Column(sql.Integer, sql.ForeignKey("exchange_places.id"), nullable=False)
 
-    place = relationship("ExchangePlaceOrm", backref="symbols")
+    place = relationship("ExchangePlaceOrm", foreign_keys=[place_id], backref="exchange_places")
 
     __table_args__ = (
         sql.UniqueConstraint("code", "place_id", name="unique_idx_code_place_id"),
@@ -53,7 +53,7 @@ class OhlcvOrm(OhlcvBase):
     symbol_id = sql.Column(sql.Integer, sql.ForeignKey("symbols.id"), primary_key=True, nullable=False)
     decision_at = sql.Column(sql.DateTime(timezone=True), index=True, primary_key=True, nullable=False)
 
-    symbol = relationship("SymbolOrm", backref="ohlcv")
+    symbol = relationship("SymbolOrm", foreign_keys=[symbol_id], backref="symbols")
 
     __table_args__ = (
         sql.UniqueConstraint(

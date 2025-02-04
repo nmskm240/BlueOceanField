@@ -94,15 +94,7 @@ class OhlcvRepository(IOhlcvRepository):
             )
             ohlcvs = result.scalars()
             for ohlcv in ohlcvs:
-                yield Ohlcv(
-                    open=ohlcv.open,
-                    high=ohlcv.high,
-                    low=ohlcv.low,
-                    close=ohlcv.close,
-                    volume=ohlcv.volume,
-                    symbol=symbol,
-                    decision_at=ohlcv.decision_at,
-                )
+                yield OhlcvMapper.to_domain(ohlcv)
 
     async def __upsert_async[
         T: OhlcvBase
