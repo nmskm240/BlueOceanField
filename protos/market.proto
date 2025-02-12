@@ -2,9 +2,9 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-package exchange;
+package market;
 
-service ExchangeService {
+service MarketService {
     rpc GetExchanges (google.protobuf.Empty) returns (ExchangePlaces) {}
     rpc GetSymbols (ExchangePlace) returns (Symbols) {}
     rpc Fetch (Symbol) returns (google.protobuf.Empty) {}
