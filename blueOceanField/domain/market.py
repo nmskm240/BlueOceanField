@@ -1,10 +1,13 @@
 from abc import ABCMeta, abstractmethod
+import asyncio
 from collections.abc import Iterator
 from dataclasses import dataclass
 from datetime import datetime
 from typing import AsyncIterator
 
 import rx
+import rx.operators as op
+import rx.subject
 
 
 @dataclass(frozen=True)
@@ -161,15 +164,18 @@ class IOhlcvRepository(IOhlcvSource, metaclass=ABCMeta):
         from_: datetime = datetime.min,
         to: datetime = datetime.max,
     ) -> rx.Observable:
-        async def handle(observer):
+        subject: rx.subject.Subject
+        async def handle():
             try:
                 async for e in await self.pull_async(symbol, from_, to):
-                    observer.on_next(e)
-                observer.on_completed()
+                    subject.on_next(e)
+                subject.on_completed()
             except Exception as e:
-                observer.on_error(e)
+                subject.on_error(e)
 
-        return rx.create(handle)
+        asyncio.create_task(handle())
+
+        return subject
 
 
 class IExchange(IOhlcvSource, metaclass=ABCMeta):
