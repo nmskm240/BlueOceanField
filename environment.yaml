@@ -6,6 +6,8 @@ dependencies:
   - aiosqlite
   - rx
   - pytest
+  - pytest-cov
+  - pytest-asyncio
   - ta-lib
   - injector
   - isort
@@ -13,6 +15,8 @@ dependencies:
   - river
   - grpcio
   - grpcio-tools
+  - grpcio-reflection
+  - protobuf
   - pip
   - pip:
     - ccxt==4.4.1
