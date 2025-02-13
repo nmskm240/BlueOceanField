@@ -15,7 +15,8 @@
                 "ms-python.black-formatter",
                 "Postman.postman-for-vscode",
                 "zxh404.vscode-proto3",
-                "ms-python.isort"
+                "ms-python.isort",
+                "EditorConfig.EditorConfig"
             ]
         }
     },

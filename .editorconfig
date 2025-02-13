@@ -15,3 +15,16 @@ insert_final_newline = true
 [{.travis.yml,npm-shrinkwrap.json,package.json}]
 indent_style = space
 indent_size = 4
+
+[*.proto]
+# Ensure proper indentation and spacing for Protobuf syntax
+indent_style = space
+indent_size = 2
+max_line_length = 120  # or 80 depending on your preference
+
+# Enable trailing newlines and proper formatting
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# No tabs, space-based indentation
+tab_width = 2
