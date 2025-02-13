@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+import "feature/process.proto";
+
+package blueOceanField.feature;
+
+
+service FeatureProcessService {
+  rpc GetFeatureProcessMeta (FeatureProcessMetaRequest) returns (FeatureProcessMetaResponse);
+}
+
+message FeatureProcessMetaRequest {}
+
+message FeatureProcessMetaResponse {
+  map<string, blueOceanField.feature.process.FeatureProcess> metadata = 1;
+}
