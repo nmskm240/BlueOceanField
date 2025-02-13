@@ -6,7 +6,7 @@
         {
             "label": "grpc gen",
             "type": "shell",
-            "command": "python -m grpc_tools.protoc -Iprotos --python_out=blueOceanField/application/generated/ --pyi_out=blueOceanField/application/generated/ --grpc_python_out=blueOceanField/ protos/*.proto",
+            "command": "python -m grpc_tools.protoc -Iprotos --python_out=blueOceanField/application/generated --pyi_out=blueOceanField/application/generated --grpc_python_out=blueOceanField/application/generated protos/**/*.proto",
             "options": {
                 "cwd": "${workspaceFolder}"
             },

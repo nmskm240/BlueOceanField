@@ -36,17 +36,17 @@ class MarketServiceStub(object):
             channel: A grpc.Channel.
         """
         self.GetExchanges = channel.unary_unary(
-                '/market.MarketService/GetExchanges',
+                '/blueOceanField.market.MarketService/GetExchanges',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
                 response_deserializer=market__pb2.ExchangePlaces.FromString,
                 _registered_method=True)
         self.GetSymbols = channel.unary_unary(
-                '/market.MarketService/GetSymbols',
+                '/blueOceanField.market.MarketService/GetSymbols',
                 request_serializer=market__pb2.ExchangePlace.SerializeToString,
                 response_deserializer=market__pb2.Symbols.FromString,
                 _registered_method=True)
         self.Fetch = channel.unary_unary(
-                '/market.MarketService/Fetch',
+                '/blueOceanField.market.MarketService/Fetch',
                 request_serializer=market__pb2.Symbol.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
@@ -93,9 +93,9 @@ def add_MarketServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'market.MarketService', rpc_method_handlers)
+            'blueOceanField.market.MarketService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('market.MarketService', rpc_method_handlers)
+    server.add_registered_method_handlers('blueOceanField.market.MarketService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -116,7 +116,7 @@ class MarketService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/market.MarketService/GetExchanges',
+            '/blueOceanField.market.MarketService/GetExchanges',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             market__pb2.ExchangePlaces.FromString,
             options,
@@ -143,7 +143,7 @@ class MarketService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/market.MarketService/GetSymbols',
+            '/blueOceanField.market.MarketService/GetSymbols',
             market__pb2.ExchangePlace.SerializeToString,
             market__pb2.Symbols.FromString,
             options,
@@ -170,7 +170,7 @@ class MarketService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/market.MarketService/Fetch',
+            '/blueOceanField.market.MarketService/Fetch',
             market__pb2.Symbol.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
