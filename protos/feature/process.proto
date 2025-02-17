@@ -12,6 +12,7 @@ message FeatureProcessParameter {
   string description = 2;
   string type = 3;
   ParameterValue value = 4;
+  repeated ConstraintInfo constraints = 5;
 }
 
 message ParameterValue {
@@ -21,15 +22,39 @@ message ParameterValue {
     float float_value = 3;
     string string_value = 4;
     bool bool_value = 5;
-    StringListValue string_list_value = 6;
-    StringFloatMapValue string_float_map_value = 7;
+    ListValue list_value = 6;
+    MapValue map_value = 7;
   }
 }
 
-message StringListValue {
-  repeated string items = 1;
+message ListValue {
+  repeated ParameterValue items = 1;
 }
 
-message StringFloatMapValue {
-  map<string, float> items = 1;
+message MapValue {
+  map<string, ParameterValue> items = 1;
+}
+
+enum Constraint {
+  CONSTRAINT_UNSPECIFIED = 0;
+  REGEX = 1;
+  UPPER_LIMIT = 2;
+  LOWER_LIMIT = 3;
+  INCLUSION = 4;
+  EXCLUSION = 5;
+  LENGTH = 6;
+  UNIQUE = 7;
+}
+
+enum ConstraintTarget {
+  TARGET_UNSPECIFIED = 0;
+  SELF =1;
+  KEY = 2;
+  VALUE = 3;
+}
+
+message ConstraintInfo {
+  Constraint type = 1;
+  ConstraintTarget target = 2;
+  repeated string args = 3;
 }
