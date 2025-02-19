@@ -25,21 +25,17 @@ _sym_db = _symbol_database.Default()
 from feature import process_pb2 as feature_dot_process__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x66\x65\x61ture/service.proto\x12\x16\x62lueOceanField.feature\x1a\x15\x66\x65\x61ture/process.proto\"\x1b\n\x19\x46\x65\x61tureProcessMetaRequest\"\xd1\x01\n\x1a\x46\x65\x61tureProcessMetaResponse\x12R\n\x08metadata\x18\x01 \x03(\x0b\x32@.blueOceanField.feature.FeatureProcessMetaResponse.MetadataEntry\x1a_\n\rMetadataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12=\n\x05value\x18\x02 \x01(\x0b\x32..blueOceanField.feature.process.FeatureProcess:\x02\x38\x01\x32\x97\x01\n\x15\x46\x65\x61tureProcessService\x12~\n\x15GetFeatureProcessMeta\x12\x31.blueOceanField.feature.FeatureProcessMetaRequest\x1a\x32.blueOceanField.feature.FeatureProcessMetaResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x66\x65\x61ture/service.proto\x12\x16\x62lueOceanField.feature\x1a\x15\x66\x65\x61ture/process.proto\"\x1b\n\x19\x46\x65\x61tureProcessMetaRequest\"^\n\x1a\x46\x65\x61tureProcessMetaResponse\x12@\n\x08metadata\x18\x01 \x03(\x0b\x32..blueOceanField.feature.process.FeatureProcess2\x97\x01\n\x15\x46\x65\x61tureProcessService\x12~\n\x15GetFeatureProcessMeta\x12\x31.blueOceanField.feature.FeatureProcessMetaRequest\x1a\x32.blueOceanField.feature.FeatureProcessMetaResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'feature.service_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_FEATUREPROCESSMETARESPONSE_METADATAENTRY']._loaded_options = None
-  _globals['_FEATUREPROCESSMETARESPONSE_METADATAENTRY']._serialized_options = b'8\001'
   _globals['_FEATUREPROCESSMETAREQUEST']._serialized_start=72
   _globals['_FEATUREPROCESSMETAREQUEST']._serialized_end=99
-  _globals['_FEATUREPROCESSMETARESPONSE']._serialized_start=102
-  _globals['_FEATUREPROCESSMETARESPONSE']._serialized_end=311
-  _globals['_FEATUREPROCESSMETARESPONSE_METADATAENTRY']._serialized_start=216
-  _globals['_FEATUREPROCESSMETARESPONSE_METADATAENTRY']._serialized_end=311
-  _globals['_FEATUREPROCESSSERVICE']._serialized_start=314
-  _globals['_FEATUREPROCESSSERVICE']._serialized_end=465
+  _globals['_FEATUREPROCESSMETARESPONSE']._serialized_start=101
+  _globals['_FEATUREPROCESSMETARESPONSE']._serialized_end=195
+  _globals['_FEATUREPROCESSSERVICE']._serialized_start=198
+  _globals['_FEATUREPROCESSSERVICE']._serialized_end=349
 # @@protoc_insertion_point(module_scope)

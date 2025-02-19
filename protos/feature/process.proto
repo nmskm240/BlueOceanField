@@ -3,27 +3,25 @@ syntax = "proto3";
 package blueOceanField.feature.process;
 
 message FeatureProcess {
-  string class_name = 1;
-  map<string, FeatureProcessParameter> parameters = 2;
+  string type = 1;
+  repeated FeatureProcessParameter parameters = 2;
 }
 
 message FeatureProcessParameter {
   string name = 1;
   string description = 2;
-  string type = 3;
-  ParameterValue value = 4;
-  repeated ConstraintInfo constraints = 5;
+  ParameterValue value = 3;
+  repeated ConstraintInfo constraints = 4;
 }
 
 message ParameterValue {
   oneof kind {
-    FeatureProcessParameter nested = 1;
-    int32 int_value = 2;
-    float float_value = 3;
-    string string_value = 4;
-    bool bool_value = 5;
-    ListValue list_value = 6;
-    MapValue map_value = 7;
+    int32 int_value = 1;
+    float float_value = 2;
+    string string_value = 3;
+    bool bool_value = 4;
+    ListValue list_value = 5;
+    MapValue map_value = 6;
   }
 }
 
@@ -56,5 +54,5 @@ enum ConstraintTarget {
 message ConstraintInfo {
   Constraint type = 1;
   ConstraintTarget target = 2;
-  repeated string args = 3;
+  map<string, string> args = 3;
 }
