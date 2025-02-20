@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
+import re
 from typing import Any, Union
 
 
@@ -27,12 +28,44 @@ class Constraint(ABC):
     kwargs: dict[str, str] = field(default_factory=dict)
 
     @abstractmethod
-    def validate(self, parameter: "FeatureProcessParameter") -> bool:
+    def validate(self, value: ParameterType) -> bool:
         raise NotImplementedError()
 
 
 class Regex(Constraint):
-    def validate(self, parameter):
+    def validate(self, value):
+        if not isinstance(value, str):
+            return False
+        return re.match(self.kwargs["pattern"], value) is not None
+
+
+class UpperLimit(Constraint):
+    def validate(self, value):
+        return False
+
+
+class LowerLimit(Constraint):
+    def validate(self, value):
+        return False
+
+
+class Inclusion(Constraint):
+    def validate(self, value):
+        return False
+
+
+class Exclusion(Constraint):
+    def validate(self, value):
+        return False
+
+
+class Length(Constraint):
+    def validate(self, value):
+        return False
+
+
+class Unique(Constraint):
+    def validate(self, value):
         return False
 
 
@@ -59,7 +92,7 @@ class FeatureProcessMeta(type):
     def __new__(cls, name: str, bases: tuple, namespace: dict[str, Any]):
         new_cls = super().__new__(cls, name, bases, namespace)
 
-        if bases and FeatureProcessBase in bases:
+        if bases and FeatureProcess in bases:
             parameters = {}
 
             for key, value in namespace.items():
@@ -71,7 +104,7 @@ class FeatureProcessMeta(type):
         return new_cls
 
 
-class FeatureProcessBase(metaclass=FeatureProcessMeta):
+class FeatureProcess(metaclass=FeatureProcessMeta):
     def __init__(self, **kwargs):
         cls_name = self.__class__.__name__
         metadata = FeatureProcessMeta.registry.get(cls_name, None)
@@ -88,16 +121,12 @@ class FeatureProcessBase(metaclass=FeatureProcessMeta):
 
 
 ## TODO: 後でプラグインとして切り分ける予定
-class Remove(FeatureProcessBase):
+class Remove(FeatureProcess):
     targets = FeatureProcessParameter[list[str]](
         name="targets",
         description="削除対象",
-        value=[
-            "test"
-        ],
-        constraints=[
-            Regex(ConstraintTarget.SELF, {"pattern": "test"}),
-        ],
+        value=[],
+        constraints=[],
     )
 
     def execute(self, input):

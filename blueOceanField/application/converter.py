@@ -1,3 +1,4 @@
+import re
 from typing import Any
 
 import blueOceanField.application.generated.feature.process_pb2 as proto
@@ -110,8 +111,9 @@ class GrpcConverter:
                 target = proto.ConstraintTarget.KEY
             case ConstraintTarget.VALUE:
                 target = proto.ConstraintTarget.VALUE
+        words = re.findall(r'[A-Z][a-z]*', value.__class__.__name__)
         return proto.ConstraintInfo(
-            type=value.__class__.__name__.upper(),
+            type='_'.join(words).upper(),
             target=target,
             args=value.kwargs,
         )
