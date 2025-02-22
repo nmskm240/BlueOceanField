@@ -1,29 +1,32 @@
 syntax = "proto3";
 
-import "google/protobuf/empty.proto";
-
 package blueOceanField.market;
 
 service MarketService {
-  rpc GetExchanges (google.protobuf.Empty) returns (ExchangePlaces) {}
-  rpc GetSymbols (ExchangePlace) returns (Symbols) {}
-  rpc Fetch (Symbol) returns (google.protobuf.Empty) {}
+  rpc GetExchanges (GetExchangesRequest) returns (GetExchangesResponse) {}
+  rpc GetSymbols (GetSymbolsRequest) returns (GetSymbolsResponse) {}
+}
+
+message GetExchangesRequest {}
+
+message GetExchangesResponse {
+  repeated ExchangePlace exchangePlaces = 1;
+}
+
+message GetSymbolsRequest {
+  ExchangePlace exchange = 1;
+}
+
+message GetSymbolsResponse {
+  repeated Symbol symbols = 1;
 }
 
 message ExchangePlace {
   string name = 1;
 }
 
-message ExchangePlaces {
-  repeated ExchangePlace exchangePlaces = 1;
-}
-
 message Symbol {
   string code = 1;
   string name = 2;
   ExchangePlace exchange = 3;
-}
-
-message Symbols {
-  repeated Symbol symbols = 1;
 }

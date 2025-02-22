@@ -49,6 +49,10 @@ class ExchangePlace:
         if not self.name:
             raise ValueError("ExchangePlace name cannot be empty")
 
+    @classmethod
+    def backtest(cls):
+        return cls("backtest")
+
 @dataclass(frozen=True)
 class Ohlcv:
     """
@@ -158,6 +162,10 @@ class IOhlcvRepository(IOhlcvSource, metaclass=ABCMeta):
     ) -> AsyncIterator[Ohlcv]:
         raise NotImplementedError
 
+    @abstractmethod
+    async def get_all_symbols_async(self) -> AsyncIterator[Symbol]:
+        raise NotImplementedError
+
     def pull_stream(
         self,
         symbol: Symbol,
@@ -179,4 +187,10 @@ class IOhlcvRepository(IOhlcvSource, metaclass=ABCMeta):
 
 
 class IExchange(IOhlcvSource, metaclass=ABCMeta):
-    pass
+    @property
+    @abstractmethod
+    def place(self) -> ExchangePlace:
+        raise NotImplementedError
+
+    async def get_all_symbols_async(self) -> AsyncIterator[Symbol]:
+        raise NotImplementedError

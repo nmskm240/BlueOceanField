@@ -1,16 +1,11 @@
 from abc import abstractmethod
 import sqlalchemy as sql
-from sqlalchemy.orm import relationship
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import relationship, declarative_base
 
 
-class OhlcvBase(DeclarativeBase):
-    @abstractmethod
-    def to_dict(self) -> dict:
-        raise NotImplementedError()
+Base = declarative_base()
 
-
-class ExchangePlaceOrm(OhlcvBase):
+class ExchangePlaceOrm(Base):
     __tablename__ = "exchange_places"
 
     id = sql.Column(sql.Integer, primary_key=True)
@@ -20,7 +15,7 @@ class ExchangePlaceOrm(OhlcvBase):
         return {"name": self.name}
 
 
-class SymbolOrm(OhlcvBase):
+class SymbolOrm(Base):
     __tablename__ = "symbols"
 
     id = sql.Column(sql.Integer, primary_key=True)
@@ -42,7 +37,7 @@ class SymbolOrm(OhlcvBase):
         }
 
 
-class OhlcvOrm(OhlcvBase):
+class OhlcvOrm(Base):
     __tablename__ = "ohlcvs"
 
     open = sql.Column(sql.Float)

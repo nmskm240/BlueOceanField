@@ -1,26 +1,34 @@
+import asyncio
 import grpc
 from concurrent import futures
 from grpc_reflection.v1alpha import reflection
 
-from blueOceanField.application.generated.feature import service_pb2, service_pb2_grpc
-from blueOceanField.presentation.grpc import FeatureProcessHandler
+import blueOceanField.application.generated as proto
+from blueOceanField.presentation.context import AppContext
+from blueOceanField.presentation.grpc import FeatureProcessHandler, MarketHandler
 
 
-def main():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    service_pb2_grpc.add_FeatureProcessServiceServicer_to_server(
-        FeatureProcessHandler(), server
+async def main():
+    container = AppContext()
+
+    server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=10))
+    proto.add_FeatureProcessServiceServicer_to_server(
+        container.injector.get(FeatureProcessHandler), server
+    )
+    proto.add_MarketServiceServicer_to_server(
+        container.injector.get(MarketHandler), server
     )
     SERVICE_NAMES = (
-        service_pb2.DESCRIPTOR.services_by_name['FeatureProcessService'].full_name,
+        proto.feature_dot_service__pb2.DESCRIPTOR.services_by_name["FeatureProcessService"].full_name,
+        proto.market__pb2.DESCRIPTOR.services_by_name["MarketService"].full_name,
         reflection.SERVICE_NAME,
     )
     reflection.enable_server_reflection(SERVICE_NAMES, server)
-    server.add_insecure_port('[::]:50051')
-    server.start()
+    server.add_insecure_port("[::]:50051")
+    await server.start()
 
-    server.wait_for_termination()
+    await server.wait_for_termination()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
