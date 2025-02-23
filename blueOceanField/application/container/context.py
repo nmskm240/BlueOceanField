@@ -1,10 +1,8 @@
 from injector import Module, Injector, singleton
 
+from blueOceanField.application.container.module import *
 from blueOceanField.domain.market import ExchangePlace, IExchange
-from blueOceanField.infra.database.database import *
-from blueOceanField.infra.database.repository import RepositoryModule
 from blueOceanField.infra.exchange import BacktestModule, CryptoExchangeModule
-from blueOceanField.presentation.grpc import *
 
 
 class AppContext:
@@ -16,7 +14,6 @@ class AppContext:
             [
                 DatabaseModule("sqlite+aiosqlite:///db.sqlite"),
                 RepositoryModule(),
-                GrpcModule(),
             ]
         )
 
@@ -28,7 +25,7 @@ class AppContext:
                 [
                     (
                         BacktestModule()
-                        if place.name == "backtest"
+                        if place == ExchangePlace.BACKTEST
                         else CryptoExchangeModule(place)
                     )
                 ]

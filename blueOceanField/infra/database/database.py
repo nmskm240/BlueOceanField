@@ -1,23 +1,10 @@
 from abc import ABCMeta, abstractmethod
 
-from injector import Module, inject, provider, singleton
-from sqlalchemy import URL, make_url
-import sqlalchemy
+from injector import inject
+from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from blueOceanField.infra.database.orm.model import Base
-
-
-class DatabaseModule(Module):
-    def __init__(self, url: URL):
-        self.url = url
-
-    @provider
-    def url_provider(self) -> URL:
-        return make_url(self.url)
-
-    def configure(self, binder):
-        binder.bind(IDatabase, to=Database, scope=singleton)
 
 
 class IDatabase(metaclass=ABCMeta):

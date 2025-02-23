@@ -11,6 +11,7 @@ import rx.subject
 
 from blueOceanField.domain.market import *
 
+
 class BacktestModule(Module):
     def configure(self, binder):
         binder.bind(IExchange, to=BacktestExchange)
@@ -72,7 +73,9 @@ class CryptoExchange(IExchange):
         if not self.__client.has["fetchMarkets"]:
             return []
         markets = self.__client.fetch_markets()
-        return [Symbol(market["id"], market["symbol"], self.place) for market in markets]
+        return [
+            Symbol(market["id"], market["symbol"], self.place) for market in markets
+        ]
 
     async def __fetch_ohlcv(
         self, symbol: Symbol, from_: datetime, to: datetime
@@ -111,7 +114,7 @@ class BacktestExchange(IExchange):
 
     @property
     def place(self) -> ExchangePlace:
-        return ExchangePlace.backtest()
+        return ExchangePlace.BACKTEST
 
     def pull_stream(
         self,
@@ -119,7 +122,7 @@ class BacktestExchange(IExchange):
         from_: datetime = datetime.min,
         to: datetime = datetime.max,
     ) -> rx.Observable:
-        return self.__source.pull_stream(symbol, from_, to)
+        return rx.defer(lambda: self.__source.pull_stream(symbol, from_, to))
 
     async def get_all_symbols_async(self):
         return await self.__source.get_all_symbols_async()

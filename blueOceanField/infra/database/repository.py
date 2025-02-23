@@ -13,10 +13,6 @@ from blueOceanField.infra.database.orm.mapper import *
 from blueOceanField.infra.database.orm.model import *
 
 
-class RepositoryModule(Module):
-    def configure(self, binder):
-        binder.bind(IOhlcvRepository, to=OhlcvRepository, scope=singleton)
-
 class OhlcvRepository(IOhlcvRepository):
     @inject
     def __init__(self, database: IDatabase):
