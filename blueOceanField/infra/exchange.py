@@ -12,30 +12,6 @@ import rx.subject
 from blueOceanField.domain.market import *
 
 
-class BacktestModule(Module):
-    def configure(self, binder):
-        binder.bind(IExchange, to=BacktestExchange)
-
-
-class CryptoExchangeModule(Module):
-    def __init__(self, place: ExchangePlace):
-        self.place = place
-        if not hasattr(ccxt, place.name):
-            raise ValueError(f"Exchange {place.name} is not supported")
-        self.client = getattr(ccxt, place.name)()
-
-    @provider
-    def provide_exchange_client(self) -> ccxt.Exchange:
-        return self.client
-
-    @provider
-    def provide_exchange_place(self) -> ExchangePlace:
-        return self.place
-
-    def configure(self, binder):
-        binder.bind(IExchange, to=CryptoExchange)
-
-
 class CryptoExchange(IExchange):
     FETCH_LIMIT = 1000
     SEC_PER_MILSEC = 1000
@@ -73,6 +49,8 @@ class CryptoExchange(IExchange):
         if not self.__client.has["fetchMarkets"]:
             return []
         markets = self.__client.fetch_markets()
+        if not markets:
+            return []
         return [
             Symbol(market["id"], market["symbol"], self.place) for market in markets
         ]
@@ -114,7 +92,7 @@ class BacktestExchange(IExchange):
 
     @property
     def place(self) -> ExchangePlace:
-        return ExchangePlace.BACKTEST
+        return BACKTEST_EXCHANGE
 
     def pull_stream(
         self,

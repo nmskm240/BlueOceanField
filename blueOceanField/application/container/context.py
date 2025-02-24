@@ -1,33 +1,43 @@
-from injector import Module, Injector, singleton
+from injector import Injector
 
 from blueOceanField.application.container.module import *
-from blueOceanField.domain.market import ExchangePlace, IExchange
-from blueOceanField.infra.exchange import BacktestModule, CryptoExchangeModule
+from blueOceanField.domain.market import ExchangePlace
 
 
 class AppContext:
-    injector: Injector
-    exchange_contexts: dict[ExchangePlace, Injector] = {}
+    __injector: Injector
+    __exchange_contexts: dict[ExchangePlace, "ExchangeContext"] = {}
 
-    def __init__(self):
-        AppContext.injector = Injector(
+    @classmethod
+    def init(cls) -> None:
+        cls.__injector = Injector(
             [
-                DatabaseModule("sqlite+aiosqlite:///db.sqlite"),
+                DatabaseModule(),
                 RepositoryModule(),
             ]
         )
 
     @classmethod
-    def get_or_create_exchange_context(cls, place: ExchangePlace):
-        return cls.exchange_contexts.setdefault(
+    def get_or_create_exchange_context(cls, place: ExchangePlace) -> "ExchangeContext":
+        return cls.__exchange_contexts.setdefault(
             place,
-            AppContext.injector.create_child_injector(
-                [
-                    (
-                        BacktestModule()
-                        if place == ExchangePlace.BACKTEST
-                        else CryptoExchangeModule(place)
-                    )
-                ]
-            ),
+            ExchangeContext(cls.__injector, place),
         )
+
+class ExchangeContext:
+    def __init__(self, parent: Injector, place: ExchangePlace):
+        self._cache = [] #TODO
+        self.injector = Injector(
+            modules=[
+                ExchangeModule(place),
+            ],
+            parent=parent,
+        )
+
+    def get_or_create_bot_context(self) -> "BotContext":
+        return BotContext(self.injector)
+
+
+class BotContext:
+    def __init__(self, parent: Injector):
+        self.injector = Injector(parent=parent)

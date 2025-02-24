@@ -9,7 +9,7 @@ from blueOceanField.presentation.grpc import FeatureProcessHandler, MarketHandle
 
 
 async def main():
-    container = AppContext()
+    AppContext.init()
 
     server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=10))
     proto.add_FeatureProcessServiceServicer_to_server(FeatureProcessHandler(), server)
