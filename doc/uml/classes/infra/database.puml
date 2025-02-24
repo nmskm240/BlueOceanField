@@ -1,0 +1,52 @@
+@startuml database
+
+package blueOceanField.infra.database {
+    package orm {
+        package mapper {
+            class ExchangePlaceMapper {
+                + {static} to_orm(exchange_place: ExchangePlace): ExchangePlaceOrm
+                + {static} from_orm(orm: ExchangePlaceOrm): ExchangePlace
+            }
+            class SymbolMapper {
+                + {static} to_orm(symbol: Symbol): SymbolOrm
+                + {static} from_orm(orm: SymbolOrm): Symbol
+            }
+            class OhlcvMapper {
+                + {static} to_orm(ohlcv: Ohlcv): OhlcvOrm
+                + {static} from_orm(orm: OhlcvOrm): Ohlcv
+            }
+        }
+        package model {
+            class ExchangePlaceOrm
+            class SymbolOrm
+            class OhlcvOrm
+        }
+    }
+
+    package database {
+        interface IDatabase {
+            + create_async(): None
+            + session(): AsyncSession
+            + close_async(): None
+        }
+
+        class Database
+    }
+
+    package repository {
+        class OhlcvRepository {
+            - __database: IDatabase
+        }
+    }
+}
+
+OhlcvRepository *- IDatabase
+ExchangePlaceMapper --> ExchangePlaceOrm
+SymbolMapper --> SymbolOrm
+OhlcvMapper --> OhlcvOrm
+
+
+IDatabase <|.. Database
+OhlcvRepository ...|> blueOceanField.domain.market.IOhlcvRepository
+
+@enduml

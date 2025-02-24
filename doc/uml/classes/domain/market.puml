@@ -1,0 +1,46 @@
+@startuml market
+
+package blueOceanField.domain.market {
+    class Symbol <<dataclass>> {
+        + code: str
+        + name: str
+        + place: ExchangePlace
+    }
+
+    class ExchangePlace <<dataclass>> {
+        + name: str
+    }
+
+    class Ohlcv <<dataclass>> {
+        + open: float
+        + high: float
+        + low: float
+        + close: float
+        + volume: float
+        + symbol: Symbol
+        + decision_at: datetime
+    }
+
+    interface IOhlcvSource {
+        + pull_stream(symbol: Symbol, from_: datetime, to: datetime): Observable[Ohlcv]
+    }
+
+    interface IOhlcvRepository {
+        + push_async(ohlcvs: Iterator[Ohlcv]): None
+        + pull_async(symbol: Symbol, from_: datetime, to: datetime): AsyncIterator[Ohlcv]
+        + get_all_symbols_async(): AsyncIterator[Symbol]
+    }
+
+    interface IExchange {
+        + place: ExchangePlace <<property>>
+    }
+
+    IOhlcvSource <|-- IOhlcvRepository
+    IOhlcvSource <|-- IExchange
+
+    IExchange *-- ExchangePlace
+    Symbol *-- ExchangePlace
+    Ohlcv *-- Symbol
+}
+
+@enduml
