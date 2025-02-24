@@ -3,7 +3,7 @@ from datetime import datetime
 import sqlalchemy
 
 from blueOceanField.infra.database.repository import OhlcvRepository
-from blueOceanField.infra.database.orm.model import OhlcvBase
+from blueOceanField.infra.database.orm.model import Base
 from blueOceanField.domain.market import Ohlcv, Symbol, ExchangePlace
 from blueOceanField.infra.database.database import Database
 
@@ -64,7 +64,7 @@ def safe_mult_symbol_ohlcvs(pull_target_symbol):
 @pytest.mark.asyncio
 async def test_push_and_pull(safe_single_symbol_ohlcvs, pull_target_symbol):
     """OhlcvRepository のデータ保存をテスト"""
-    database = Database(sqlalchemy.make_url(DATABASE_URL), OhlcvBase)
+    database = Database(sqlalchemy.make_url(DATABASE_URL))
     await database.create_async()
     repository = OhlcvRepository(database)
 
@@ -81,7 +81,7 @@ async def test_push_and_pull(safe_single_symbol_ohlcvs, pull_target_symbol):
 @pytest.mark.asyncio
 async def test_push_and_pull_multiple(safe_mult_symbol_ohlcvs, pull_target_symbol):
     """複数の OHLCV データの保存と取得をテスト"""
-    database = Database(sqlalchemy.make_url(DATABASE_URL), OhlcvBase)
+    database = Database(sqlalchemy.make_url(DATABASE_URL))
     await database.create_async()
     repository = OhlcvRepository(database)
     # データを複数挿入
@@ -95,7 +95,7 @@ async def test_push_and_pull_multiple(safe_mult_symbol_ohlcvs, pull_target_symbo
 @pytest.mark.asyncio
 async def test_pull_empty(pull_target_symbol):
     """空のデータベースからのデータ取得をテスト"""
-    database = Database(sqlalchemy.make_url(DATABASE_URL), OhlcvBase)
+    database = Database(sqlalchemy.make_url(DATABASE_URL))
     await database.create_async()
     repository = OhlcvRepository(database)
     records: list[Ohlcv] = []

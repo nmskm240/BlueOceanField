@@ -49,10 +49,7 @@ class ExchangePlace:
         if not self.name:
             raise ValueError("ExchangePlace name cannot be empty")
 
-    @staticmethod
-    @property
-    def BACKTEST():
-        return ExchangePlace("backtest")
+BACKTEST_EXCHANGE = ExchangePlace("backtest")
 
 @dataclass(frozen=True)
 class Ohlcv:

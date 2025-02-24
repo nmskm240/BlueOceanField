@@ -10,7 +10,7 @@ from blueOceanField.infra.exchange import CryptoExchange
 
 @pytest.fixture
 def exchange():
-    return CryptoExchange(ccxt.binance())
+    return CryptoExchange(ccxt.binance(), ExchangePlace("Binance"))
 
 @pytest.fixture
 def symbol():

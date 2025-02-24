@@ -113,7 +113,7 @@ class FeatureProcess(metaclass=FeatureProcessMeta):
             return
 
         for name, value in metadata.parameters.items():
-            setattr(self, name, kwargs.get(name, value))
+            setattr(self, name, kwargs.get(name, value.value))
 
     @abstractmethod
     def execute(self, input: dict[str, float]) -> dict[str, float]:
@@ -130,4 +130,4 @@ class Remove(FeatureProcess):
     )
 
     def execute(self, input):
-        return {k: v for k, v in input.items() if k not in self.targets.value}
+        return {k: v for k, v in input.items() if k not in self.targets}
