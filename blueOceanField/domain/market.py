@@ -82,6 +82,18 @@ class Ohlcv:
     symbol: Symbol
     decision_at: datetime
 
+    def to_dict(self) -> dict:
+        return {
+            "open": self.open,
+            "high": self.high,
+            "low": self.low,
+            "close": self.close,
+            "volume": self.volume,
+            "symbol": self.symbol.code,
+            "place": self.symbol.place.name,
+            "decision_at": self.decision_at,
+        }
+
     def __post_init__(self):
         if (
             self.open <= 0

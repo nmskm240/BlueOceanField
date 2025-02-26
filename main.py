@@ -5,7 +5,7 @@ from grpc_reflection.v1alpha import reflection
 
 import blueOceanField.application.generated as proto
 from blueOceanField.application.container.context import AppContext
-from blueOceanField.presentation.grpc import FeatureProcessHandler, MarketHandler
+from blueOceanField.presentation.grpc import FeatureProcessHandler, MarketHandler, BotHandler
 
 
 async def main():
@@ -14,11 +14,13 @@ async def main():
     server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=10))
     proto.add_FeatureProcessServiceServicer_to_server(FeatureProcessHandler(), server)
     proto.add_MarketServiceServicer_to_server(MarketHandler(), server)
+    proto.add_BotServiceServicer_to_server(BotHandler(), server)
     SERVICE_NAMES = (
         proto.feature_dot_service__pb2.DESCRIPTOR.services_by_name[
             "FeatureProcessService"
         ].full_name,
         proto.market__pb2.DESCRIPTOR.services_by_name["MarketService"].full_name,
+        proto.bot__pb2.DESCRIPTOR.services_by_name["BotService"].full_name,
         reflection.SERVICE_NAME,
     )
     reflection.enable_server_reflection(SERVICE_NAMES, server)

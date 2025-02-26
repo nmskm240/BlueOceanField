@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+import "market.proto";
+import "feature/process.proto";
+
+package blueOceanField.bot;
+
+service BotService {
+  // TODO: 後でBotの作成と実行を分ける
+  rpc CreateBot (CreateBotRequest) returns (stream CreateBotResponse);
+}
+
+message CreateBotRequest {
+  string name = 1;
+  blueOceanField.market.Symbol symbol = 2;
+  repeated blueOceanField.feature.process.FeatureProcess processes = 3;
+}
+
+message CreateBotResponse {
+  map<string, string> result = 1;
+}

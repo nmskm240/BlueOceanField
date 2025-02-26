@@ -9,5 +9,8 @@ from feature.process_pb2_grpc import *
 from feature.service_pb2 import *
 from feature.service_pb2_grpc import *
 
+from bot_pb2 import *
+from bot_pb2_grpc import *
+
 from market_pb2 import *
 from market_pb2_grpc import *

@@ -1,6 +1,7 @@
 from injector import Injector
 
 from blueOceanField.application.container.module import *
+from blueOceanField.domain.feature import FeatureProcess
 from blueOceanField.domain.market import ExchangePlace
 
 
@@ -24,9 +25,10 @@ class AppContext:
             ExchangeContext(cls.__injector, place),
         )
 
+
 class ExchangeContext:
     def __init__(self, parent: Injector, place: ExchangePlace):
-        self._cache = [] #TODO
+        self._bot_contexts: list[BotContext] = []
         self.injector = Injector(
             modules=[
                 ExchangeModule(place),
@@ -34,10 +36,21 @@ class ExchangeContext:
             parent=parent,
         )
 
-    def get_or_create_bot_context(self) -> "BotContext":
-        return BotContext(self.injector)
+    def get_context(self, id: str) -> "BotContext":
+        # TODO
+        pass
+
+    def create_bot_context(self, processes: Iterable[FeatureProcess]) -> "BotContext":
+        context = BotContext(self.injector)
+        self._bot_contexts.append(context)
+        return context
 
 
 class BotContext:
-    def __init__(self, parent: Injector):
-        self.injector = Injector(parent=parent)
+    def __init__(self, parent: Injector, processes: Iterable[FeatureProcess] = []):
+        self.injector = Injector(
+            modules=[
+                BotModule(processes),
+            ],
+            parent=parent,
+        )

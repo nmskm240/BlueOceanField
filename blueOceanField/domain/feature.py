@@ -119,7 +119,6 @@ class FeatureProcess(metaclass=FeatureProcessMeta):
     def execute(self, input: dict[str, float]) -> dict[str, float]:
         raise NotImplementedError()
 
-
 ## TODO: 後でプラグインとして切り分ける予定
 class Remove(FeatureProcess):
     targets = FeatureProcessParameter[list[str]](
