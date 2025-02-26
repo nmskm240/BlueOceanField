@@ -8,26 +8,29 @@ from blueOceanField.domain.market import ExchangePlace, Symbol
 
 
 class GrpcConverter:
+    _to_grpc_map = {
+        ExchangePlace: lambda x: GrpcConverter._exchange_place_to_grpc(x),
+        Symbol: lambda x:  GrpcConverter._symbol_to_grpc(x),
+        FeatureProcessMetaData: lambda x:  GrpcConverter._feature_process_to_grpc(x),
+        FeatureProcessParameter: lambda x: GrpcConverter._feature_process_parameter_to_grpc(x),
+    }
+
+    _from_grpc_map = {
+        market_proto.ExchangePlace: lambda x: GrpcConverter._grpc_to_exchange_place(x),
+        market_proto.Symbol: lambda x: GrpcConverter._grpc_to_symbol(x),
+        feature_proto.FeatureProcess: lambda x: GrpcConverter._grpc_to_feature_process(x),
+    }
+
     @staticmethod
     def to_grpc(instance: Any) -> Any:
-        if isinstance(instance, ExchangePlace):
-            return GrpcConverter._exchange_place_to_grpc(instance)
-        elif isinstance(instance, Symbol):
-            return GrpcConverter._symbol_to_grpc(instance)
-        elif isinstance(instance, FeatureProcessMetaData):
-            return GrpcConverter._feature_process_to_grpc(instance)
-        elif isinstance(instance, FeatureProcessParameter):
-            return GrpcConverter._feature_process_parameter_to_grpc(instance)
+        if type(instance) in GrpcConverter._to_grpc_map:
+            return GrpcConverter._to_grpc_map[type(instance)](instance)
         raise TypeError(f"Unsupported type: {type(instance)}")
 
     @staticmethod
     def from_grpc(message: Any) -> Any:
-        if isinstance(message, market_proto.Symbol):
-            return GrpcConverter._grpc_to_symbol(message)
-        elif isinstance(message, market_proto.ExchangePlace):
-            return GrpcConverter._grpc_to_exchange_place(message)
-        elif isinstance(message, feature_proto.FeatureProcess):
-            return GrpcConverter._grpc_to_feature_process(message)
+        if type(message) in GrpcConverter._from_grpc_map:
+            return GrpcConverter._from_grpc_map[type(message)](message)
         raise TypeError(f"Unsupported message type: {type(message)}")
 
     @staticmethod
