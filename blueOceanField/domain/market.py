@@ -49,7 +49,9 @@ class ExchangePlace:
         if not self.name:
             raise ValueError("ExchangePlace name cannot be empty")
 
+
 BACKTEST_EXCHANGE = ExchangePlace("backtest")
+
 
 @dataclass(frozen=True)
 class Ohlcv:
@@ -88,10 +90,10 @@ class Ohlcv:
             "high": self.high,
             "low": self.low,
             "close": self.close,
-            "volume": self.volume,
-            "symbol": self.symbol.code,
-            "place": self.symbol.place.name,
-            "decision_at": self.decision_at,
+            # "volume": self.volume,
+            # "symbol": self.symbol.code,
+            # "place": self.symbol.place.name,
+            # "decision_at": self.decision_at,
         }
 
     def __post_init__(self):
@@ -183,6 +185,7 @@ class IOhlcvRepository(IOhlcvSource, metaclass=ABCMeta):
         to: datetime = datetime.max,
     ) -> rx.Observable:
         subject: rx.subject.Subject
+
         async def handle():
             try:
                 async for e in await self.pull_async(symbol, from_, to):

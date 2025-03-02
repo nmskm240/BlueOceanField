@@ -47,10 +47,10 @@ class ExchangeContext:
 
 
 class BotContext:
-    def __init__(self, parent: Injector, processes: Iterable[FeatureProcess] = []):
+    def __init__(self, parent: Injector):
         self.injector = Injector(
             modules=[
-                BotModule(processes),
+                BotModule(),
             ],
             parent=parent,
         )

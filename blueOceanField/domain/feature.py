@@ -117,6 +117,7 @@ class FeatureProcess(metaclass=FeatureProcessMeta):
 
     @abstractmethod
     def execute(self, input: dict[str, float]) -> dict[str, float]:
+        # NOTE: dict[str, float] は暫定
         raise NotImplementedError()
 
 ## TODO: 後でプラグインとして切り分ける予定

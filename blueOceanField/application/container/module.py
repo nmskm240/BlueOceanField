@@ -3,7 +3,6 @@ import ccxt
 from injector import Module, provider, singleton
 import rx
 from sqlalchemy import URL, make_url
-from blueOceanField.application import usecase
 from blueOceanField.domain.bot import Bot
 from blueOceanField.domain.feature import FeatureProcess
 from blueOceanField.domain.market import *
@@ -51,13 +50,5 @@ class ExchangeModule(Module):
 
 
 class BotModule(Module):
-    def __init__(self, processes: Iterable[FeatureProcess]):
-        self.processes = processes
-
-    @provider
-    @singleton
-    def pipeline_provider(self) -> rx.Observable:
-        return usecase.build_feature_pipeline(self.processes)
-
     def configure(self, binder):
         binder.bind(Bot, Bot, scope=singleton)

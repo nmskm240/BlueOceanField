@@ -30,20 +30,25 @@ class CryptoExchange(IExchange):
         symbol: Symbol,
         from_: datetime = datetime.min,
         to: datetime = datetime.max,
-    ) -> ConnectableObservable:
-        subject = rx.subject.Subject()
+    ) -> rx.Observable:
+        return rx.create(lambda observer, _: self.__create_ohlcv_stream(observer, symbol, from_, to))
 
+    def __create_ohlcv_stream(
+        self,
+        observer: rx.core.Observer,
+        symbol: Symbol,
+        from_: datetime,
+        to: datetime,
+    ) -> None:
         async def handle():
             try:
                 async for e in self.__fetch_ohlcv(symbol, from_, to):
-                    subject.on_next(e)
-                subject.on_completed()
+                    observer.on_next(e)
+                observer.on_completed()
             except Exception as e:
-                subject.on_error(e)
+                observer.on_error(e)
 
         asyncio.create_task(handle())
-
-        return subject
 
     async def get_all_symbols_async(self):
         if not self.__client.has["fetchMarkets"]:
