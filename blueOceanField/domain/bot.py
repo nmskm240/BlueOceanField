@@ -1,6 +1,6 @@
-from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime
+import logging
 from typing import Iterable, Optional
 from injector import inject
 import river
@@ -11,9 +11,10 @@ import rx.operators as op
 import rx.operators
 import rx.scheduler
 
-from blueOceanField.domain.feature import FeatureProcess
-from blueOceanField.domain.market import IExchange, Ohlcv, Symbol
+from blueOceanField.domain.market import IExchange, Symbol
 
+
+logger = logging.getLogger(__name__)
 
 # NOTE: 予測対象は選択可能にしたほうがいい気がするが、設計上Ohlcvのどれかしか選べないため選択可能にするメリットがあるか微妙
 TARGET_LABEL = "close"
@@ -61,9 +62,10 @@ class Bot:
             self._model_update(inputs)
             self._predicate(dict(inputs[1]))
 
+        logger.info(f"bot run {symbol.place} {symbol.code}")
+
         self._exchange.pull_stream(symbol, from_, to).pipe(
             op.map(lambda x: x.to_dict()),
-            op.do_action(lambda x: print(x)),
             op.flat_map(lambda x: self._pipeline.pipe(op.start_with(x))),
             op.buffer_with_count(2, 1),
         ).subscribe(

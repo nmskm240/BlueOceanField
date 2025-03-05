@@ -17,7 +17,8 @@
                 "zxh404.vscode-proto3",
                 "ms-python.isort",
                 "EditorConfig.EditorConfig",
-                "jebbs.plantuml"
+                "jebbs.plantuml",
+                "redhat.vscode-yaml"
             ]
         }
     },

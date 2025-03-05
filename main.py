@@ -1,17 +1,25 @@
 import asyncio
+import logging
 import grpc
 from concurrent import futures
 from grpc_reflection.v1alpha import reflection
 
 import blueOceanField.application.generated as proto
 from blueOceanField.application.container.context import AppContext
-from blueOceanField.presentation.grpc import FeatureProcessHandler, MarketHandler, BotHandler
+from blueOceanField.presentation.grpc import *
+from blueOceanField.presentation.intercepts import *
 
 
 async def main():
     AppContext.init()
 
-    server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=10))
+    logger = logging.getLogger("blueOceanField")
+    server = grpc.aio.server(
+        futures.ThreadPoolExecutor(max_workers=10),
+        interceptors=[
+            LoggingInterceptor(logger)
+        ],
+    )
     proto.add_FeatureProcessServiceServicer_to_server(FeatureProcessHandler(), server)
     proto.add_MarketServiceServicer_to_server(MarketHandler(), server)
     proto.add_BotServiceServicer_to_server(BotHandler(), server)
@@ -25,8 +33,8 @@ async def main():
     )
     reflection.enable_server_reflection(SERVICE_NAMES, server)
     server.add_insecure_port("[::]:50051")
+    logger.info("server start")
     await server.start()
-
     await server.wait_for_termination()
 
 

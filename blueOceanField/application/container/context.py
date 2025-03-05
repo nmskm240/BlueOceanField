@@ -1,3 +1,5 @@
+import logging.config
+from typing import Iterable
 from injector import Injector
 
 from blueOceanField.application.container.module import *
@@ -13,10 +15,13 @@ class AppContext:
     def init(cls) -> None:
         cls.__injector = Injector(
             [
+                ConfigModule(Path("config.yaml")),
                 DatabaseModule(),
                 RepositoryModule(),
             ]
         )
+        config = cls.__injector.get(Config)
+        logging.config.dictConfig(config.logging)
 
     @classmethod
     def get_or_create_exchange_context(cls, place: ExchangePlace) -> "ExchangeContext":

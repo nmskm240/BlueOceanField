@@ -1,30 +1,25 @@
-from typing import Iterable, Optional, Type
+from pathlib import Path
+from typing import Type
 import ccxt
-from injector import Module, provider, singleton
-import rx
-from sqlalchemy import URL, make_url
+from injector import Module, inject, provider, singleton
+from sqlalchemy import URL
 from blueOceanField.domain.bot import Bot
-from blueOceanField.domain.feature import FeatureProcess
 from blueOceanField.domain.market import *
+from blueOceanField.infra.config import Config
 from blueOceanField.infra.database.database import Database, IDatabase
 from blueOceanField.infra.database.repository import OhlcvRepository
 from blueOceanField.infra.exchange import BacktestExchange, CryptoExchange
 
 
 class DatabaseModule(Module):
-    def __init__(self, database: Type[IDatabase] = Database, url: Optional[URL] = None):
-        self.url = (
-            url if url is not None else make_url("sqlite+aiosqlite:///:memory:")
-        )  # TODO: configから取得する
-        self._database = database
-
     @provider
     @singleton
-    def url_provider(self) -> URL:
-        return make_url(self.url)
+    @inject
+    def provide_url(self, config: Config) -> URL:
+        return config.database_url
 
     def configure(self, binder):
-        binder.bind(IDatabase, to=self._database, scope=singleton)
+        binder.bind(IDatabase, to=Database, scope=singleton)
 
 
 class RepositoryModule(Module):
@@ -52,3 +47,12 @@ class ExchangeModule(Module):
 class BotModule(Module):
     def configure(self, binder):
         binder.bind(Bot, Bot, scope=singleton)
+
+class ConfigModule(Module):
+    def __init__(self, path: Path):
+        self.path = path
+
+    @provider
+    @singleton
+    def provide_config(self) -> Config:
+        return Config.from_file(self.path)

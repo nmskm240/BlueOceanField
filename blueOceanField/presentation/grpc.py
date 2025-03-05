@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from grpc import ServicerContext
+from grpc.aio import ServicerContext
 from blueOceanField.application.converter import GrpcConverter
 import blueOceanField.application.generated as proto
 import blueOceanField.application.usecase as usecase

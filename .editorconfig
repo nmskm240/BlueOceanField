@@ -22,6 +22,10 @@ indent_style = space
 indent_size = 2
 max_line_length = 120  # or 80 depending on your preference
 
+[*.yaml]
+indent_size = 2
+indent_style = space
+
 # Enable trailing newlines and proper formatting
 trim_trailing_whitespace = true
 insert_final_newline = true
