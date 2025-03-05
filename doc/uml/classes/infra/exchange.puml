@@ -1,0 +1,9 @@
+@startuml exchange
+
+package blueOceanField.infra.exchange {
+    class BacktestExchange
+
+    BacktestExchange ...|> blueOceanField.domain.market.IExchange
+}
+
+@enduml

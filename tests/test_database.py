@@ -2,14 +2,14 @@ import pytest
 import sqlalchemy
 
 from blueOceanField.infra.database.database import Database
-from blueOceanField.infra.database.orm.model import OhlcvBase
+from blueOceanField.infra.database.orm.model import Base
 
 DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
 
 @pytest.fixture(scope="function", autouse=True)
 def test_database():
-    return Database(sqlalchemy.make_url(DATABASE_URL), OhlcvBase)
+    return Database(sqlalchemy.make_url(DATABASE_URL))
 
 
 @pytest.mark.asyncio

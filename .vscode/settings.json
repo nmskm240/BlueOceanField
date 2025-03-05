@@ -9,5 +9,8 @@
     "files.exclude": {
         "**/__pycache__/**": true,
         "**/.pytest_cache/**": true
+    },
+    "yaml.schemas": {
+        "file:///root/.vscode-server/extensions/ms-python.python-2025.0.0-linux-x64/schemas/conda-environment.json": "file:///workspaces/BlueOceanField/environment.yaml",
     }
 }

@@ -1,0 +1,54 @@
+@startuml market
+
+package blueOceanField.domain.feature {
+    class ParameterType <<(T,#8f8f8f) Union>> {
+        int,
+        float,
+        str,
+        bool,
+        list[ParameterType],
+        dict[str, ParameterType],
+    }
+
+    enum ConstraintTarget {
+        UNSPECIFIED
+        SELF
+        KEY
+        VALUE
+    }
+
+    abstract class Constraint {
+        + target: ConstraintTarget
+        + kwargs: dict[str, str]
+        + {abstract} validate(value: ParameterType)
+    }
+
+    class FeatureProcessParameter<T: ParameterType> <<dataclass>> {
+        + name: str
+        + description: str
+        + value: T
+        + constraints: list[Constraint]
+    }
+
+    class FeatureProcessMetaData <<dataclass>> {
+        + type: str
+        + parameters: dict[str, FeatureProcessParameter]
+    }
+
+    metaclass FeatureProcessMeta {
+        + registry: dict[str, FeatureProcessMetaData]
+    }
+
+    abstract class FeatureProcess {
+        + {abstract} execute(input: dict[str, float]): dict[str, float]
+    }
+
+    FeatureProcess --|> FeatureProcessMeta
+
+    Constraint *-- ConstraintTarget
+    FeatureProcessMeta *-- FeatureProcessMetaData
+    FeatureProcessMetaData *-- FeatureProcessParameter
+    FeatureProcessParameter *-- Constraint
+}
+
+@enduml

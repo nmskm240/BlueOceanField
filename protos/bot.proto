@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+import "market.proto";
+import "feature/process.proto";
+import "google/protobuf/timestamp.proto";
+
+package blueOceanField.bot;
+
+service BotService {
+  // TODO: 後でBotの作成と実行を分ける
+  rpc CreateBot (CreateBotRequest) returns (stream CreateBotResponse);
+}
+
+message CreateBotRequest {
+  optional string name = 1;
+  blueOceanField.market.Symbol symbol = 2;
+  repeated blueOceanField.feature.process.FeatureProcess processes = 3;
+  optional google.protobuf.Timestamp start_time = 4;
+  optional google.protobuf.Timestamp end_time = 5;
+}
+
+message CreateBotResponse {
+  float pred_value = 1;
+  float ans_value = 2;
+  map<string, float> input_values = 3;
+  string target_label = 4;
+}

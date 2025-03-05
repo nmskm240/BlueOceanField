@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Iterator, Type
 
+from injector import Module, inject, singleton
 from sqlalchemy import insert, select
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.orm import joinedload
@@ -8,20 +9,12 @@ import sqlalchemy.ext
 import sqlalchemy.ext.asyncio
 from blueOceanField.domain.market import ExchangePlace, IOhlcvRepository, Ohlcv
 from blueOceanField.infra.database.database import IDatabase
-from blueOceanField.infra.database.orm.mapper import (
-    ExchangePlaceMapper,
-    OhlcvMapper,
-    SymbolMapper,
-)
-from blueOceanField.infra.database.orm.model import (
-    ExchangePlaceOrm,
-    OhlcvBase,
-    OhlcvOrm,
-    SymbolOrm,
-)
+from blueOceanField.infra.database.orm.mapper import *
+from blueOceanField.infra.database.orm.model import *
 
 
 class OhlcvRepository(IOhlcvRepository):
+    @inject
     def __init__(self, database: IDatabase):
         self.__database = database
 
@@ -96,8 +89,16 @@ class OhlcvRepository(IOhlcvRepository):
             for ohlcv in ohlcvs:
                 yield OhlcvMapper.to_domain(ohlcv)
 
+    async def get_all_symbols_async(self):
+        """登録されているシンボルを取得"""
+        async with self.__database.session() as session:
+            result = await session.execute(select(SymbolOrm))
+            symbols = result.scalars()
+            for symbol in symbols:
+                yield SymbolMapper.to_domain(symbol)
+
     async def __upsert_async[
-        T: OhlcvBase
+        T: Base
     ](
         self,
         orm: Type,

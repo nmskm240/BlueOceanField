@@ -1,0 +1,10 @@
+@startuml domain
+
+package blueOceanField {
+    package domain {
+        !include market.puml
+        !include feature.puml
+    }
+}
+
+@enduml

@@ -12,11 +12,14 @@ dependencies:
   - injector
   - isort
   - configparser
-  - river
   - grpcio
   - grpcio-tools
   - grpcio-reflection
   - protobuf
+  - cython
+  - rust
+  - pyyaml
   - pip
   - pip:
-    - ccxt==4.4.1
+      - ccxt==4.4.1
+      - "git+https://github.com/online-ml/river"

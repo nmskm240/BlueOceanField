@@ -1,0 +1,10 @@
+@startuml infra
+
+package blueOceanField {
+    package infra {
+        !include database.puml
+        !include exchange.puml
+    }
+}
+
+@enduml

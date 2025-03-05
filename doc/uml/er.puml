@@ -1,0 +1,35 @@
+@startuml er
+
+hide circle
+skinparam linetype ortho
+
+entity ohlcvs {
+    + open: float
+    + high: float
+    + low: float
+    + close: float
+    + volume: float
+    + symbol_id: int <<FK>> <<PK>>
+    + decision_at: datetime <<PK>>
+    ---
+    # unique_idx_symbol_id_decision_at <<UK>>
+}
+
+entity symbols {
+    +id: int <<PK>>
+    +code: string
+    +name: string
+    +place_id: int <<FK>>
+    ---
+    # unique_idx_code_place_id <<UK>>
+}
+
+entity exchange_places {
+    + id: int <<PK>>
+    + name: string <<UK>>
+}
+
+ohlcvs }o-- symbols
+symbols }o-- exchange_places
+
+@enduml

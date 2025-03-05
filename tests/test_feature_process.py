@@ -1,4 +1,5 @@
 import pytest
+from blueOceanField.application.converter import GrpcConverter
 from blueOceanField.domain.feature import Remove, FeatureProcessMeta
 
 @pytest.fixture
@@ -11,10 +12,9 @@ def test_metadata_registration():
     metadata = FeatureProcessMeta.registry.get("Remove")
 
     assert metadata is not None, "Remove のメタデータが登録されていない"
-    assert "parameters" in metadata, "パラメータ情報が正しく登録されていない"
-    assert "targets" in metadata["parameters"], "targets パラメータが登録されていない"
-    assert metadata["parameters"]["targets"]["value"] == [], "targets のデフォルト値が間違っている"
-    assert metadata["parameters"]["targets"]["type"] == "list", "targets の型情報が間違っている"
+    assert "targets" in metadata.parameters.keys(), "targets パラメータが登録されていない"
+    assert metadata.parameters["targets"].value == [], "targets のデフォルト値が間違っている"
+    assert type(metadata.parameters["targets"].value) == list, "targets の型情報が間違っている"
 
 def test_instance_variable_assignment():
     """ `Remove` インスタンスごとに異なる `targets` が適用されるか確認 """
@@ -42,10 +42,8 @@ def test_default_parameter():
 
     assert remove.targets == [], "デフォルト値が正しく適用されていない"
 
-def test_metadata_json():
-    """ メタデータの JSON 変換が正しく行われるか確認 """
-    import json
-    metadata_json = json.dumps(FeatureProcessMeta.registry, indent=4, ensure_ascii=False)
+def test_metadata_serialize():
+    """ メタデータの grpc 変換が正しく行われるか確認 """
 
-    assert "Remove" in metadata_json, "メタデータ JSON に Remove クラスが含まれていない"
-    assert '"targets"' in metadata_json, "メタデータ JSON に targets が含まれていない"
+    converted = {name: GrpcConverter.to_grpc(meta) for name, meta in FeatureProcessMeta.registry.items()}
+    assert "Remove" in converted, "変換後 に Remove クラスが含まれていない"

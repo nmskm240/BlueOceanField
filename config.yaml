@@ -1,0 +1,21 @@
+logging:
+  version: 1
+  formatters:
+    console:
+      format:  "[%(levelname)s] %(asctime)s %(name)s - %(message)s"
+      datefmt: "%Y-%m-%d %H:%M:%S"
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: console
+  loggers:
+    root:
+      level: INFO
+      handlers: [console]
+    blueOceanField:
+      level: INFO
+      handlers: [console]
+      propagate: False
+  disable_existing_loggers: False
+database:
+  url: "sqlite+aiosqlite:///:memory:"

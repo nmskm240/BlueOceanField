@@ -1,0 +1,71 @@
+@startuml injector_contexts
+actor user
+participant server
+participant app
+participant exchange
+participant bot
+
+activate server
+activate app
+
+user -> server: create bot request
+server -> app: request bot creation
+alt exchange not cached
+    app -> exchange: create and cache
+    activate exchange
+else
+    app -> exchange: get from cache
+end
+exchange -> bot: provide exchange
+activate bot
+... bot running ...
+bot --> exchange: dispose OHLCV stream
+deactivate bot
+
+@enduml
+
+
+@startuml single_bot_backtest
+actor user
+participant client
+participant server
+participant bot
+participant backtest_exchange
+database database
+
+activate client
+activate server
+activate database
+
+user -> client: create bot order
+client ->> server: send order request
+server ->> database : save order details
+server -> backtest_exchange: create backtest environment
+activate backtest_exchange
+backtest_exchange ->> database: load past market data within time range
+database -->> backtest_exchange: return historical OHLCV data
+server -> bot: create bot instance
+activate bot
+bot -> backtest_exchange: subscribe to OHLCV stream
+
+loop bot running
+    backtest_exchange --> bot: send historical OHLCV data
+    bot -> bot: predict and learn from data
+    opt if conditions met
+        bot -> backtest_exchange: simulate order execution
+        backtest_exchange -> database: log simulated order
+        backtest_exchange -->> bot: return simulated execution result
+    end
+    bot -->> client: stream learning results
+    client -->> user: update visualization
+    ... until user stops or backtest completes ...
+end
+
+backtest_exchange --> bot: complete or cancel
+deactivate backtest_exchange
+bot -> database: save trained model
+bot -->> client: show backtest metrics
+deactivate bot
+client --> user: backtest complete
+
+@enduml
