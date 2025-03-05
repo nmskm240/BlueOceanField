@@ -26,8 +26,10 @@ class BotLearnDataset:
     target: float
 
 @dataclass(frozen=True)
-class BotPredicateDataset:
+class BotPredicatedDataset:
     input: dict
+    ans: float
+    pred: float
 
 class Bot:
     @inject
@@ -60,7 +62,7 @@ class Bot:
     ) -> None:
         def learn_and_predicate(inputs: Iterable[dict]) -> None:
             self._model_update(inputs)
-            self._predicate(dict(inputs[1]))
+            self._predicate(inputs[1])
 
         logger.info(f"bot run {symbol.place} {symbol.code}")
 
@@ -73,13 +75,16 @@ class Bot:
         )
 
     def _model_update(self, input: Iterable[dict]) -> None:
-        prev = input[0]
+        prev = dict(input[0])
         prev.pop(TARGET_LABEL)
-        target = input[1][TARGET_LABEL]
+        target = dict(input[1])[TARGET_LABEL]
         dataset = BotLearnDataset(prev, target)
         self._model.learn_one(dataset.target, dataset.input)
         self._on_model_updated_subject.on_next(None)
 
     def _predicate(self, x: dict):
-        pred = self._model.forecast(1, xs=[x])
-        self._on_predicated_subject.on_next(pred[0])
+        input = dict(x)
+        ans = input.pop(TARGET_LABEL)
+        pred = self._model.forecast(1, xs=[input])
+        obj = BotPredicatedDataset(x, ans, pred[0])
+        self._on_predicated_subject.on_next(obj)

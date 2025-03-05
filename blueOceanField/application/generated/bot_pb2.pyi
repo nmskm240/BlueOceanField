@@ -23,11 +23,20 @@ class CreateBotRequest(_message.Message):
     def __init__(self, name: _Optional[str] = ..., symbol: _Optional[_Union[_market_pb2.Symbol, _Mapping]] = ..., processes: _Optional[_Iterable[_Union[_process_pb2.FeatureProcess, _Mapping]]] = ..., start_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., end_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class CreateBotResponse(_message.Message):
-    __slots__ = ("pred_value", "ans_value", "timestamp")
+    __slots__ = ("pred_value", "ans_value", "input_values", "target_label")
+    class InputValuesEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: float
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[float] = ...) -> None: ...
     PRED_VALUE_FIELD_NUMBER: _ClassVar[int]
     ANS_VALUE_FIELD_NUMBER: _ClassVar[int]
-    TIMESTAMP_FIELD_NUMBER: _ClassVar[int]
+    INPUT_VALUES_FIELD_NUMBER: _ClassVar[int]
+    TARGET_LABEL_FIELD_NUMBER: _ClassVar[int]
     pred_value: float
     ans_value: float
-    timestamp: _timestamp_pb2.Timestamp
-    def __init__(self, pred_value: _Optional[float] = ..., ans_value: _Optional[float] = ..., timestamp: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    input_values: _containers.ScalarMap[str, float]
+    target_label: str
+    def __init__(self, pred_value: _Optional[float] = ..., ans_value: _Optional[float] = ..., input_values: _Optional[_Mapping[str, float]] = ..., target_label: _Optional[str] = ...) -> None: ...

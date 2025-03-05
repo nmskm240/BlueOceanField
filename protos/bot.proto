@@ -22,5 +22,6 @@ message CreateBotRequest {
 message CreateBotResponse {
   float pred_value = 1;
   float ans_value = 2;
-  google.protobuf.Timestamp timestamp = 3;
+  map<string, float> input_values = 3;
+  string target_label = 4;
 }

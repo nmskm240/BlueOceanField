@@ -6,8 +6,8 @@ from grpc_reflection.v1alpha import reflection
 
 import blueOceanField.application.generated as proto
 from blueOceanField.application.container.context import AppContext
-from blueOceanField.presentation.grpc import *
-from blueOceanField.presentation.intercepts import *
+from blueOceanField.presentation.grpc.handler import *
+from blueOceanField.presentation.grpc.interceptor import *
 
 
 async def main():
